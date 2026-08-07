@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل دخول / تسجيل حساب</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4b79a1, #283e51);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      border-radius: 18px;
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 18px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      padding: 10px 0;
+      border-radius: 12px;
+      transition: background 0.25s ease;
+      font-weight: 600;
+      user-select: none;
+    }
+    .tab.active {
+      background: rgba(255, 255, 255, 0.28);
+    }
+    .form-panel {
+      padding: 25px 28px 32px;
+    }
+    .form-panel h2 {
+      margin: 0 0 24px;
+      font-size: 1.5rem;
+      letter-spacing: 0.3px;
+    }
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .field input:focus {
+      border-color: #ffd369;
+      background: rgba(255, 255, 255, 0.16);
+    }
+    .action {
+      margin-top: 10px;
+    }
+    .action button {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 14px 0;
+      border-radius: 12px;
+      background: #ffd369;
+      color: #1a1a1a;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .action button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 25px rgba(255, 211, 105, 0.25);
+    }
+    .switch-text {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .switch-text span {
+      color: #ffd369;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .hidden {
+      display: none;
+    }
+    .note {
+      font-size: 0.88rem;
+      margin-top: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" id="signInTab">تسجيل دخول</div>
+      <div class="tab" id="signUpTab">إنشاء حساب</div>
+    </div>
+
+    <div class="form-panel" id="signInPanel">
+      <h2>تسجيل دخول</h2>
+      <div class="field">
+        <label for="signin-username">اسم المستخدم</label>
+        <input type="text" id="signin-username" placeholder="ادخل اسم المستخدم" />
+      </div>
+      <div class="field">
+        <label for="signin-password">كلمة المرور</label>
+        <input type="password" id="signin-password" placeholder="ادخل كلمة المرور" />
+      </div>
+      <div class="action">
+        <button type="button" onclick="submitSignIn()">دخول</button>
+      </div>
+      <p class="switch-text">ليس لديك حساب؟ <span onclick="showSignUp()">إنشاء حساب</span></p>
+    </div>
+
+    <div class="form-panel hidden" id="signUpPanel">
+      <h2>إنشاء حساب جديد</h2>
+      <div class="field">
+        <label for="signup-firstname">الاسم الأول</label>
+        <input type="text" id="signup-firstname" placeholder="ادخل الاسم الأول" />
+      </div>
+      <div class="field">
+        <label for="signup-lastname">الاسم الثاني</label>
+        <input type="text" id="signup-lastname" placeholder="ادخل الاسم الثاني" />
+      </div>
+      <div class="field">
+        <label for="signup-username">اسم المستخدم</label>
+        <input type="text" id="signup-username" placeholder="اختيار اسم مستخدم" />
+      </div>
+      <div class="field">
+        <label for="signup-password">كلمة المرور</label>
+        <input type="password" id="signup-password" placeholder="ادخل كلمة المرور" />
+      </div>
+      <div class="field">
+        <label for="signup-student-number">رقم الطالب</label>
+        <input type="text" id="signup-student-number" placeholder="ادخل رقم الطالب" />
+      </div>
+      <div class="field">
+        <label for="signup-parent-number">رقم ولي الأمر</label>
+        <input type="text" id="signup-parent-number" placeholder="ادخل رقم ولي الأمر" />
+      </div>
+      <div class="field">
+        <label for="signup-grade"> المرحلة </label>
+        <input type="text" id="signup-grade" placeholder="ادخل المرحلة" />
+      </div>
+      <div class="field">
+        <label for="signup-level"> المستوي </label>
+        <input type="text" id="signup-level" placeholder="ادخل المستوى" />
+      </div>
+      <div class="action">
+        <button type="button" onclick="submitSignUp()">تسجيل</button>
+      </div>
+      <p class="switch-text">لديك حساب؟ <span onclick="showSignIn()">تسجيل دخول</span></p>
+    </div>
+  </div>
+
+  <script>
+    const signInTab = document.getElementById('signInTab');
+    const signUpTab = document.getElementById('signUpTab');
+    const signInPanel = document.getElementById('signInPanel');
+    const signUpPanel = document.getElementById('signUpPanel');
+
+    signInTab.addEventListener('click', showSignIn);
+    signUpTab.addEventListener('click', showSignUp);
+
+    function setActiveTab(activeTab) {
+      signInTab.classList.toggle('active', activeTab === 'signin');
+      signUpTab.classList.toggle('active', activeTab === 'signup');
+      signInPanel.classList.toggle('hidden', activeTab !== 'signin');
+      signUpPanel.classList.toggle('hidden', activeTab !== 'signup');
+    }
+
+    function showSignUp() {
+      setActiveTab('signup');
+    }
+
+    function showSignIn() {
+      setActiveTab('signin');
+    }
+
+    function submitSignIn() {
+      const username = document.getElementById('signin-username').value.trim();
+      const password = document.getElementById('signin-password').value.trim();
+
+      if (!username || !password) {
+        alert('يرجى إدخال اسم المستخدم وكلمة المرور.');
+        return;
+      }
+
+      alert('تم تسجيل الدخول بنجاح (نموذج تجريبي).');
+    }
+
+    function submitSignUp() {
+      const firstname = document.getElementById('signup-firstname').value.trim();
+      const lastname = document.getElementById('signup-lastname').value.trim();
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value.trim();
+      const studentNumber = document.getElementById('signup-student-number').value.trim();
+      const parentNumber = document.getElementById('signup-parent-number').value.trim();
+      const grade = document.getElementById('signup-grade').value.trim();
+      const level = document.getElementById('signup-level').value.trim();
+
+      if (!firstname || !lastname || !username || !password || !studentNumber || !parentNumber || !grade || !level) {
+        alert('يرجى ملء جميع الحقول قبل التسجيل.');
+        return;
+      }
+
+      alert('تم إنشاء الحساب بنجاح (نموذج تجريبي).');
+    }
+  </script>
+</body>
+</html>

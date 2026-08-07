@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الإدارة - بيانات الطلاب</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      color: #1f2937;
+      padding: 24px;
+    }
+    .wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    thead {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    th,
+    td {
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+    }
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    tbody tr:hover {
+      background: #eef2ff;
+    }
+    .status-present {
+      color: #047857;
+      font-weight: 700;
+    }
+    .status-absent {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>بيانات الطلاب</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>كود الطالب</th>
+          <th>اسم الطالب</th>
+          <th>ميعاد الحصة</th>
+          <th>الحضور</th>
+          <th>الدرجات</th>
+          <th>رقم ولي الأمر</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody">
+        <tr>
+          <td colspan="6">جارٍ تحميل البيانات...</td>
+        </tr>
+      </tbody>
+    </table>
+    <p id="tableStatus" class="note"></p>
+  </div>
+
+  <script>
+    const studentsEndpoint = '/api/students'; // عدِّل هذا المسار إلى مسار الباك إن كان مختلفًا
+    const tbody = document.getElementById('studentTableBody');
+    const tableStatus = document.getElementById('tableStatus');
+
+    function attendanceClass(status) {
+      return status && status.toLowerCase().includes('حاضر') ? 'status-present' : 'status-absent';
+    }
+
+    async function loadStudents() {
+      try {
+        const response = await fetch(studentsEndpoint);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const students = await response.json();
+
+        if (!Array.isArray(students) || students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات لعرضها.</td></tr>';
+          tableStatus.textContent = 'تم الاتصال بالباك بنجاح، لكن لا توجد بيانات مدرسية حالياً.';
+          return;
+        }
+
+        tbody.innerHTML = students.map(student => `
+          <tr>
+            <td>${student.code ?? ''}</td>
+            <td>${student.name ?? ''}</td>
+            <td>${student.classTime ?? student.lectureTime ?? ''}</td>
+            <td class="${attendanceClass(student.attendance ?? '')}">${student.attendance ?? ''}</td>
+            <td>${student.grade ?? ''}</td>
+            <td>${student.parentNumber ?? student.parentPhone ?? ''}</td>
+          </tr>
+        `).join('');
+
+        tableStatus.textContent = 'تم تحميل البيانات من الباك بنجاح.';
+      } catch (error) {
+        tbody.innerHTML = '<tr><td colspan="6">حدث خطأ أثناء جلب البيانات.</td></tr>';
+        tableStatus.textContent = 'لم يتمكّن المتصفح من تحميل البيانات من الباك. تأكد من أن المسار صحيح والخادم يعمل.';
+        console.error(error);
+      }
+    }
+
+    loadStudents();
+  </script>
+</body>
+</html>
