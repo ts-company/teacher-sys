@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:15
+    container_name: receipts_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: receipts_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: receipts-system
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:admin@db:5432/receipts_db
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+volumes:
+  postgres_data:
