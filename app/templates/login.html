@@ -1,183 +1,316 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>تسجيل دخول / تسجيل حساب</title>
   <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-mid: #1e293b;
+      --primary: #7c3aed;
+      --accent: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #cbd5e1;
+      --line: rgba(255,255,255,0.12);
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #4b79a1, #283e51);
-      color: #fff;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 24px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(124, 58, 237, 0.6), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.5), transparent 30%),
+        linear-gradient(135deg, var(--bg-dark), var(--bg-mid));
+      color: var(--text);
     }
-    .container {
-      width: 100%;
-      max-width: 420px;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-      border-radius: 18px;
-      backdrop-filter: blur(12px);
+
+    .auth-shell {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: 1.05fr 1.2fr;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--line);
+      border-radius: 28px;
       overflow: hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
+
+    .brand-panel {
+      position: relative;
+      padding: 38px 32px;
+      background: linear-gradient(160deg, rgba(124,58,237,0.88), rgba(15,23,42,0.88));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .brand-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+    }
+
+    .brand-panel h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .brand-panel p {
+      margin: 0;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 360px;
+    }
+
+    .brand-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(251, 191, 36, 0.9);
+    }
+
+    .card-panel {
+      background: rgba(15, 23, 42, 0.78);
+      padding: 28px 26px 22px;
+    }
+
     .tabs {
       display: flex;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.12);
-      padding: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 8px;
+      margin-bottom: 18px;
+      gap: 8px;
     }
+
     .tab {
       flex: 1;
       text-align: center;
       cursor: pointer;
-      padding: 10px 0;
+      padding: 12px 16px;
       border-radius: 12px;
-      transition: background 0.25s ease;
-      font-weight: 600;
+      transition: all 0.25s ease;
+      font-weight: 700;
       user-select: none;
+      color: var(--muted);
     }
+
     .tab.active {
-      background: rgba(255, 255, 255, 0.28);
+      background: linear-gradient(135deg, rgba(124,58,237,0.9), rgba(59,130,246,0.7));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.35);
     }
+
     .form-panel {
-      padding: 25px 28px 32px;
+      padding: 10px 6px 0;
     }
+
     .form-panel h2 {
-      margin: 0 0 24px;
-      font-size: 1.5rem;
-      letter-spacing: 0.3px;
+      margin: 0 0 20px;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #fff;
     }
+
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
+
     .field label {
       display: block;
       margin-bottom: 8px;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
+      color: var(--muted);
+      font-weight: 600;
     }
+
     .field input {
       width: 100%;
-      padding: 12px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.08);
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
       color: #fff;
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
+
+    .field input::placeholder {
+      color: rgba(203, 213, 225, 0.7);
+    }
+
     .field input:focus {
-      border-color: #ffd369;
-      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(124,58,237,0.9);
+      box-shadow: 0 0 0 4px rgba(124,58,237,0.18);
+      background: rgba(255,255,255,0.06);
     }
+
     .action {
-      margin-top: 10px;
+      margin-top: 8px;
     }
+
     .action button {
       width: 100%;
       border: none;
       outline: none;
-      padding: 14px 0;
-      border-radius: 12px;
-      background: #ffd369;
-      color: #1a1a1a;
-      font-weight: 700;
-      font-size: 1rem;
+      padding: 15px 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.04rem;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 26px rgba(59,130,246,0.26);
     }
+
     .action button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 25px rgba(255, 211, 105, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 32px rgba(124,58,237,0.28);
     }
+
     .switch-text {
-      margin-top: 14px;
-      font-size: 0.95rem;
+      margin-top: 18px;
+      margin-bottom: 0;
       text-align: center;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--muted);
+      font-size: 0.96rem;
     }
+
     .switch-text span {
-      color: #ffd369;
-      cursor: pointer;
+      color: #8b5cf6;
       font-weight: 700;
+      cursor: pointer;
     }
-    .hidden {
-      display: none;
-    }
-    .note {
-      font-size: 0.88rem;
-      margin-top: 12px;
-      color: rgba(255, 255, 255, 0.75);
-      line-height: 1.4;
+
+    .hidden { display: none; }
+
+    @media (max-width: 820px) {
+      .auth-shell { grid-template-columns: 1fr; }
+      .brand-panel { padding: 28px 22px; }
+      .card-panel { padding: 20px 18px 18px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="tabs">
-      <div class="tab active" id="signInTab">تسجيل دخول</div>
-      <div class="tab" id="signUpTab">إنشاء حساب</div>
+  <div class="auth-shell">
+    <div class="brand-panel">
+      <div class="brand-badge">🎓</div>
+      <h1>نظام التعليم</h1>
+      <p>منصة متكاملة لإدارة الطلاب، الحضور، والأنشطة التعليمية بسرعة وسهولة.</p>
+
+      <div class="brand-features">
+        <div class="feature"><span class="feature-dot"></span> إدارة الطلاب</div>
+        <div class="feature"><span class="feature-dot"></span> متابعة الحضور</div>
+        <div class="feature"><span class="feature-dot"></span> تقارير سريعة</div>
+        <div class="feature"><span class="feature-dot"></span> نظام آمن</div>
+      </div>
     </div>
 
-    <div class="form-panel" id="signInPanel">
-      <h2>تسجيل دخول</h2>
-      <div class="field">
-        <label for="signin-username">اسم المستخدم</label>
-        <input type="text" id="signin-username" placeholder="ادخل اسم المستخدم" />
+    <div class="card-panel">
+      <div class="tabs">
+        <div class="tab active" id="signInTab">تسجيل دخول</div>
+        <div class="tab" id="signUpTab">إنشاء حساب</div>
       </div>
-      <div class="field">
-        <label for="signin-password">كلمة المرور</label>
-        <input type="password" id="signin-password" placeholder="ادخل كلمة المرور" />
-      </div>
-      <div class="action">
-        <button type="button" onclick="submitSignIn()">دخول</button>
-      </div>
-      <p class="switch-text">ليس لديك حساب؟ <span onclick="showSignUp()">إنشاء حساب</span></p>
-    </div>
 
-    <div class="form-panel hidden" id="signUpPanel">
-      <h2>إنشاء حساب جديد</h2>
-      <div class="field">
-        <label for="signup-firstname">الاسم الأول</label>
-        <input type="text" id="signup-firstname" placeholder="ادخل الاسم الأول" />
+      <div class="form-panel" id="signInPanel">
+        <h2>مرحباً بعودتك</h2>
+        <div class="field">
+          <label for="signin-username">اسم المستخدم</label>
+          <input type="text" id="signin-username" placeholder="ادخل اسم المستخدم" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="signin-password">كلمة المرور</label>
+          <input type="password" id="signin-password" placeholder="ادخل كلمة المرور" autocomplete="current-password" />
+        </div>
+        <div class="action">
+          <button type="button" onclick="submitSignIn()">دخول</button>
+        </div>
+        <p class="switch-text">ليس لديك حساب؟ <span onclick="showSignUp()">إنشاء حساب</span></p>
       </div>
-      <div class="field">
-        <label for="signup-lastname">الاسم الثاني</label>
-        <input type="text" id="signup-lastname" placeholder="ادخل الاسم الثاني" />
+
+      <div class="form-panel hidden" id="signUpPanel">
+        <h2>إنشاء حساب جديد</h2>
+        <div class="field">
+          <label for="signup-firstname">الاسم الأول</label>
+          <input type="text" id="signup-firstname" placeholder="ادخل الاسم الأول" />
+        </div>
+        <div class="field">
+          <label for="signup-lastname">الاسم الثاني</label>
+          <input type="text" id="signup-lastname" placeholder="ادخل الاسم الثاني" />
+        </div>
+        <div class="field">
+          <label for="signup-username">اسم المستخدم</label>
+          <input type="text" id="signup-username" placeholder="اختيار اسم مستخدم" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="signup-password">كلمة المرور</label>
+          <input type="password" id="signup-password" placeholder="ادخل كلمة المرور" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label for="signup-student-number">رقم الهاتف</label>
+          <input type="text" id="signup-student-number" placeholder="ادخل رقم الهاتف" />
+        </div>
+        <div class="field">
+          <label for="signup-parent-number">رقم ولي الأمر</label>
+          <input type="text" id="signup-parent-number" placeholder="ادخل رقم ولي الأمر" />
+        </div>
+        <div class="field">
+          <label for="signup-grade">المرحلة</label>
+          <input type="text" id="signup-grade" placeholder="ادخل المرحلة" />
+        </div>
+        <div class="field">
+          <label for="signup-level">المستوى</label>
+          <input type="text" id="signup-level" placeholder="ادخل المستوى" />
+        </div>
+        <div class="action">
+          <button type="button" onclick="submitSignUp()">تسجيل</button>
+        </div>
+        <p class="switch-text">لديك حساب؟ <span onclick="showSignIn()">تسجيل دخول</span></p>
       </div>
-      <div class="field">
-        <label for="signup-username">اسم المستخدم</label>
-        <input type="text" id="signup-username" placeholder="اختيار اسم مستخدم" />
-      </div>
-      <div class="field">
-        <label for="signup-password">كلمة المرور</label>
-        <input type="password" id="signup-password" placeholder="ادخل كلمة المرور" />
-      </div>
-      <div class="field">
-        <label for="signup-student-number">رقم الطالب</label>
-        <input type="text" id="signup-student-number" placeholder="ادخل رقم الطالب" />
-      </div>
-      <div class="field">
-        <label for="signup-parent-number">رقم ولي الأمر</label>
-        <input type="text" id="signup-parent-number" placeholder="ادخل رقم ولي الأمر" />
-      </div>
-      <div class="field">
-        <label for="signup-grade"> المرحلة </label>
-        <input type="text" id="signup-grade" placeholder="ادخل المرحلة" />
-      </div>
-      <div class="field">
-        <label for="signup-level"> المستوي </label>
-        <input type="text" id="signup-level" placeholder="ادخل المستوى" />
-      </div>
-      <div class="action">
-        <button type="button" onclick="submitSignUp()">تسجيل</button>
-      </div>
-      <p class="switch-text">لديك حساب؟ <span onclick="showSignIn()">تسجيل دخول</span></p>
     </div>
   </div>
 
@@ -186,6 +319,7 @@
     const signUpTab = document.getElementById('signUpTab');
     const signInPanel = document.getElementById('signInPanel');
     const signUpPanel = document.getElementById('signUpPanel');
+    const apiUrl = (path) => new URL(path, window.location.origin).toString();
 
     signInTab.addEventListener('click', showSignIn);
     signUpTab.addEventListener('click', showSignUp);
@@ -205,7 +339,7 @@
       setActiveTab('signin');
     }
 
-    function submitSignIn() {
+    async function submitSignIn() {
       const username = document.getElementById('signin-username').value.trim();
       const password = document.getElementById('signin-password').value.trim();
 
@@ -214,10 +348,35 @@
         return;
       }
 
-      alert('تم تسجيل الدخول بنجاح (نموذج تجريبي).');
+      try {
+        const formData = new URLSearchParams({ username, password });
+        const response = await fetch(apiUrl('/login'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString(),
+          credentials: 'same-origin'
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'اسم المستخدم أو كلمة المرور غير صحيحة.');
+        }
+
+        if (data.role === 'admin') {
+          window.location.href = apiUrl('/admin/');
+          return;
+        }
+
+        alert('تم تسجيل الدخول بنجاح.');
+      } catch (error) {
+        alert(error.message || 'حدث خطأ أثناء تسجيل الدخول.');
+      }
     }
 
-    function submitSignUp() {
+    async function submitSignUp() {
       const firstname = document.getElementById('signup-firstname').value.trim();
       const lastname = document.getElementById('signup-lastname').value.trim();
       const username = document.getElementById('signup-username').value.trim();
@@ -232,7 +391,38 @@
         return;
       }
 
-      alert('تم إنشاء الحساب بنجاح (نموذج تجريبي).');
+      try {
+        const payload = {
+          first_name: firstname,
+          last_name: lastname,
+          username,
+          password,
+          phone_number: studentNumber,
+          parent_phone_number: parentNumber,
+          stage: grade,
+          level: Number(level)
+        };
+
+        const response = await fetch(apiUrl('/signup/get_signup'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'حدث خطأ أثناء إنشاء الحساب.');
+        }
+
+        alert('تم إنشاء الحساب بنجاح.');
+        showSignIn();
+      } catch (error) {
+        alert(error.message || 'حدث خطأ أثناء إنشاء الحساب.');
+      }
     }
   </script>
 </body>

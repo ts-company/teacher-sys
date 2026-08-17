@@ -1,120 +1,249 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة الإدارة - بيانات الطلاب</title>
   <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-mid: #1e293b;
+      --panel: rgba(15, 23, 42, 0.72);
+      --line: rgba(255,255,255,0.12);
+      --primary: #7c3aed;
+      --primary-2: #3b82f6;
+      --text: #e2e8f0;
+      --muted: #cbd5e1;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
+      min-height: 100vh;
+      padding: 28px 20px;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
-      color: #1f2937;
-      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,0.45), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(59,130,246,0.35), transparent 25%),
+        linear-gradient(135deg, var(--bg-dark), var(--bg-mid));
+      color: var(--text);
     }
+
     .wrapper {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
     }
-    h1 {
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 22px;
       margin-bottom: 20px;
-      font-size: 2rem;
-      text-align: center;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 12px 30px rgba(124,58,237,0.35);
+    }
+
+    .status-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #bbf7d0;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .table-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .table-header h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+      font-weight: 800;
+    }
+
+    .count-box {
+      min-width: 110px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(59,130,246,0.18));
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 700;
+      color: #ddd6fe;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #ffffff;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-      overflow: hidden;
+      background: transparent;
     }
+
     thead {
-      background: #2563eb;
-      color: #ffffff;
+      background: linear-gradient(135deg, rgba(124,58,237,0.88), rgba(59,130,246,0.75));
+      color: #fff;
     }
-    th,
-    td {
-      padding: 14px 16px;
+
+    th, td {
+      padding: 16px 18px;
       text-align: center;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.96rem;
     }
+
+    tbody tr { transition: background 0.2s ease; }
+
     tbody tr:nth-child(even) {
-      background: #f8fafc;
+      background: rgba(255,255,255,0.02);
     }
+
     tbody tr:hover {
-      background: #eef2ff;
+      background: rgba(124,58,237,0.08);
     }
-    .status-present {
-      color: #047857;
-      font-weight: 700;
+
+    .note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      min-height: 24px;
     }
-    .status-absent {
-      color: #b91c1c;
-      font-weight: 700;
+
+    @media (max-width: 760px) {
+      .topbar, .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .table-card { overflow-x: auto; }
+      table { min-width: 760px; }
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <h1>بيانات الطلاب</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>كود الطالب</th>
-          <th>اسم الطالب</th>
-          <th>ميعاد الحصة</th>
-          <th>الحضور</th>
-          <th>الدرجات</th>
-          <th>رقم ولي الأمر</th>
-        </tr>
-      </thead>
-      <tbody id="studentTableBody">
-        <tr>
-          <td colspan="6">جارٍ تحميل البيانات...</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-badge">🎓</div>
+        <span>لوحة الإدارة</span>
+      </div>
+      <div class="status-pill">Admin Dashboard</div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h1>بيانات الطلاب</h1>
+        <div class="count-box" id="studentCount">0</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>كود الطالب</th>
+            <th>اسم الطالب</th>
+            <th>المرحلة</th>
+            <th>المستوى</th>
+            <th>رقم الهاتف</th>
+            <th>رقم ولي الأمر</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <tr>
+            <td colspan="6">جارٍ تحميل البيانات...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <p id="tableStatus" class="note"></p>
   </div>
 
   <script>
-    const studentsEndpoint = '/api/students'; // عدِّل هذا المسار إلى مسار الباك إن كان مختلفًا
     const tbody = document.getElementById('studentTableBody');
     const tableStatus = document.getElementById('tableStatus');
-
-    function attendanceClass(status) {
-      return status && status.toLowerCase().includes('حاضر') ? 'status-present' : 'status-absent';
-    }
+    const studentCount = document.getElementById('studentCount');
+    const apiUrl = (path) => new URL(path, window.location.origin).toString();
 
     async function loadStudents() {
       try {
-        const response = await fetch(studentsEndpoint);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(apiUrl('/admin/get_students'), {
+          method: 'GET',
+          credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || `HTTP ${response.status}`);
+        }
+
         const students = await response.json();
 
         if (!Array.isArray(students) || students.length === 0) {
           tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات لعرضها.</td></tr>';
-          tableStatus.textContent = 'تم الاتصال بالباك بنجاح، لكن لا توجد بيانات مدرسية حالياً.';
+          studentCount.textContent = '0';
+          tableStatus.textContent = 'تم الاتصال بالباك بنجاح، لكن لا توجد بيانات للطلاب حالياً.';
           return;
         }
 
+        studentCount.textContent = students.length;
+
         tbody.innerHTML = students.map(student => `
           <tr>
-            <td>${student.code ?? ''}</td>
-            <td>${student.name ?? ''}</td>
-            <td>${student.classTime ?? student.lectureTime ?? ''}</td>
-            <td class="${attendanceClass(student.attendance ?? '')}">${student.attendance ?? ''}</td>
-            <td>${student.grade ?? ''}</td>
-            <td>${student.parentNumber ?? student.parentPhone ?? ''}</td>
+            <td>${student.id ?? ''}</td>
+            <td>${(student.first_name ?? '') + ' ' + (student.last_name ?? '')}</td>
+            <td>${student.stage ?? ''}</td>
+            <td>${student.level ?? ''}</td>
+            <td>${student.phone_number ?? ''}</td>
+            <td>${student.parent_phone_number ?? ''}</td>
           </tr>
         `).join('');
 
-        tableStatus.textContent = 'تم تحميل البيانات من الباك بنجاح.';
+        tableStatus.textContent = 'تم تحميل بيانات الطلاب بنجاح.';
       } catch (error) {
         tbody.innerHTML = '<tr><td colspan="6">حدث خطأ أثناء جلب البيانات.</td></tr>';
-        tableStatus.textContent = 'لم يتمكّن المتصفح من تحميل البيانات من الباك. تأكد من أن المسار صحيح والخادم يعمل.';
+        studentCount.textContent = '0';
+        tableStatus.textContent = 'تعذر تحميل البيانات. تأكد من تسجيل الدخول كـ admin أو من أن ال API يعمل بشكل صحيح.';
         console.error(error);
       }
     }
